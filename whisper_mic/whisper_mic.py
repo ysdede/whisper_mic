@@ -32,7 +32,7 @@ class WhisperMic:
         self.dynamic_energy = dynamic_energy
         self.save_file = save_file
         self.verbose = verbose
-        self.english = english
+        self.english = lang == "en"
         self.lang = lang
         self.keyboard = pynput.keyboard.Controller()
 
