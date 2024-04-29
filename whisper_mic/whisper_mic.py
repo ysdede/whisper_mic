@@ -23,7 +23,7 @@ from whisper_mic.utils import get_logger
 # asound = cdll.LoadLibrary('libasound.so')
 # asound.snd_lib_error_set_handler(c_error_handler)
 class WhisperMic:
-    def __init__(self,model="base",device=("cuda" if torch.cuda.is_available() else "cpu"),english=False,verbose=False,energy=300,pause=2,dynamic_energy=False,save_file=False, model_root="~/.cache/whisper",mic_index=None,implementation="whisper",hallucinate_threshold=300, lang="en"):
+    def __init__(self,model="base",model_dir=None,device=("cuda" if torch.cuda.is_available() else "cpu"),english=False,verbose=False,energy=300,pause=2,dynamic_energy=False,save_file=False, model_root="~/.cache/whisper",mic_index=None,implementation="whisper",hallucinate_threshold=300, lang="en"):
 
         self.logger = get_logger("whisper_mic", "info")
         self.energy = energy
@@ -46,6 +46,10 @@ class WhisperMic:
 
         if (model != "large" and model != "large-v2") and self.english:
             model = model + ".en"
+
+        if model_dir:
+            print(f"model_dir specified, loading model from {model_dir}")
+            model = model_dir
 
         model_root = os.path.expanduser(model_root)
 
