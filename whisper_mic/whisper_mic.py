@@ -23,7 +23,7 @@ from whisper_mic.utils import get_logger
 # asound = cdll.LoadLibrary('libasound.so')
 # asound.snd_lib_error_set_handler(c_error_handler)
 class WhisperMic:
-    def __init__(self,model="base",device=("cuda" if torch.cuda.is_available() else "cpu"),english=False,verbose=False,energy=300,pause=2,dynamic_energy=False,save_file=False, model_root="~/.cache/whisper",mic_index=None,implementation="whisper",hallucinate_threshold=300):
+    def __init__(self,model="base",device=("cuda" if torch.cuda.is_available() else "cpu"),english=False,verbose=False,energy=300,pause=2,dynamic_energy=False,save_file=False, model_root="~/.cache/whisper",mic_index=None,implementation="whisper",hallucinate_threshold=300, lang="en"):
 
         self.logger = get_logger("whisper_mic", "info")
         self.energy = energy
@@ -33,6 +33,7 @@ class WhisperMic:
         self.save_file = save_file
         self.verbose = verbose
         self.english = english
+        self.lang = lang
         self.keyboard = pynput.keyboard.Controller()
 
         self.platform = platform.system()
@@ -170,14 +171,14 @@ class WhisperMic:
             predicted_text = ''
             # faster_whisper returns an iterable object rather than a string
             if self.faster:
-                segments, info = self.audio_model.transcribe(audio_data)
+                segments, info = self.audio_model.transcribe(audio_data, language=self.lang)
                 for segment in segments:
                     predicted_text += segment.text
             else:
                 if self.english:
                     result = self.audio_model.transcribe(audio_data,language='english',suppress_tokens="")
                 else:
-                    result = self.audio_model.transcribe(audio_data,suppress_tokens="")
+                    result = self.audio_model.transcribe(audio_data, language=self.lang, suppress_tokens="")
                 predicted_text = result["text"]
 
             if not self.verbose:
