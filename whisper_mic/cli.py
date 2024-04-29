@@ -27,7 +27,8 @@ from whisper_mic import WhisperMic
 def main(model: str, english: bool, verbose: bool, energy:  int, pause: float, dynamic_energy: bool, save_file: bool, device: str, loop: bool, dictate: bool,mic_index:Optional[int],list_devices: bool,faster: bool,hallucinate_threshold:int, lan: str) -> None:
     if list_devices:
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
-            print(f"{name:<56} found for Microphone(device_index={index}")
+            if "microphone" in name.lower():
+                print(f"{name:<56} found for Microphone(device_index={index}")
 
         return
     mic = WhisperMic(model=model, english=english, verbose=verbose, energy=energy, pause=pause, dynamic_energy=dynamic_energy, save_file=save_file, device=device,mic_index=mic_index,implementation=("faster_whisper" if faster else "whisper"),hallucinate_threshold=hallucinate_threshold, lang=lan)
